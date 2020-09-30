@@ -7,29 +7,42 @@ import SignInNSignUp from "./pages/signInNSignUp/SignInNSignUp.component";
 import Homepage from "./pages/homepage/Homepage.component";
 import ShopPage from "./pages/shop/Shop.component";
 
-import { auth } from "./components/firebase/firebase.utils";
+import {
+  auth,
+  createUserProfileDocument,
+} from "./components/firebase/firebase.utils";
 
 class App extends React.Component {
   constructor() {
-    super()
+    super();
 
     this.state = {
-      currentUser: null
-    }
+      currentUser: null,
+    };
   }
 
   unsubscrieFromAuth = null;
 
   componentDidMount() {
-    this.unsubscrieFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({ currentUser: user});
+    this.unsubscrieFromAuth = auth.onAuthStateChanged(async (userAuth) => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
 
-      console.log(user);
+        userRef.onSnapshot(snapshot => {
+          this.setState({
+            currentUser: {
+              id: snapshot.id,
+              ...snapshot.data()
+            }
+          })
+        })
+      }
+      this.setState({currentUser: userAuth});
     });
-  } 
+  }
 
   componentWillUnmount() {
-    this.unsubscrieFromAuth(); 
+    this.unsubscrieFromAuth();
   }
 
   render() {
