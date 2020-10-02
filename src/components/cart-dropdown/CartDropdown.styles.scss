@@ -11,14 +11,26 @@
   right: 40px;
   z-index: 5;
 
+  .empty-message {
+    font-size: 18px;
+    margin: 50px auto;
+  }
+
   .cart-items {
     height: 340px;
     display: flex;
     flex-direction: column;
     overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   button {
     margin-top: auto;
   }
 }
+
