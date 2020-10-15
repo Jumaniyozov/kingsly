@@ -1,19 +1,30 @@
 import React from 'react';
+import axios from 'axios';
 import StripeCheckout from 'react-stripe-checkout';
 
 const StripeCheckoutButton = ({ price }) => {
   const priceForStripe = price * 100;
-  const publishableKey = 'pk_test_WBqax2FWVzS9QlpJScO07iuL';
+  const publishableKey = 'pk_test_s9qCsKErGhjYmsCGDKZ46PI700BJXwADi8';
 
   const onToken = token => {
-    console.log(token);
-    alert('Payment Succesful!');
+    axios({
+      url:'payment',
+      method: 'post',
+      data: {
+        amount: priceForStripe,
+        token
+      }
+    }).then(response => {
+      alert('pay success')
+    }).catch(err => {
+      console.error('payment error: ', JSON.parse(err));
+    })
   };
 
   return (
     <StripeCheckout
       label='Pay Now'
-      name='CRWN Clothing Ltd.'
+      name='Kingsly'
       billingAddress
       shippingAddress
       image='https://svgshare.com/i/CUz.svg'
